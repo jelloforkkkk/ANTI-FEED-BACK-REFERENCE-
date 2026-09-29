@@ -20,6 +20,10 @@ jobs:
           path: build/_deps
           key: ${{ runner.os }}-juce-deps-${{ hashFiles('CMakeLists.txt') }}
 
+      # Sets up MSVC environment variables so CMake can locate Visual Studio
+      - name: Set up MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
       - name: Configure
         run: cmake -B build -G "Visual Studio 17 2022" -A x64
 
