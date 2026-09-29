@@ -27,7 +27,7 @@ juce_add_plugin(FeedbackSuppressor
     COPY_PLUGIN_AFTER_BUILD TRUE
     PLUGIN_MANUFACTURER_CODE Yout
     PLUGIN_CODE Fsup
-    FORMATS VST3 Standalone AU
+    FORMATS VST3 Standalone
     PRODUCT_NAME "Feedback Suppressor"
 )
 
