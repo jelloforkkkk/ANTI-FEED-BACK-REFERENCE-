@@ -1,0 +1,41 @@
+name: Build VST3
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch: {}   # lets you click "Run workflow" manually on GitHub too
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      # Speeds up re-runs a lot: JUCE only gets downloaded/rebuilt once.
+      - name: Cache JUCE / CMake FetchContent
+        uses: actions/cache@v4
+        with:
+          path: build/_deps
+          key: ${{ runner.os }}-juce-deps-${{ hashFiles('CMakeLists.txt') }}
+
+      - name: Configure
+        run: cmake -B build -G "Visual Studio 17 2022" -A x64
+
+      - name: Build (Release)
+        run: cmake --build build --config Release --parallel
+
+      - name: Upload VST3
+        uses: actions/upload-artifact@v4
+        with:
+          name: FeedbackSuppressor-VST3
+          path: build/FeedbackSuppressor_artefacts/Release/VST3/**
+          if-no-files-found: error
+
+      - name: Upload Standalone app
+        uses: actions/upload-artifact@v4
+        with:
+          name: FeedbackSuppressor-Standalone
+          path: build/FeedbackSuppressor_artefacts/Release/Standalone/**
+          if-no-files-found: error
